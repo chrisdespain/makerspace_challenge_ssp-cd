@@ -1,0 +1,99 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #f5f5f4;
+  --surface: #ffffff;
+  --surface-hover: #f8fafc;
+  --border: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --accent: #6366f1;
+  --accent-hover: #4f46e5;
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --text-xmuted: #94a3b8;
+  --sidebar-bg: #f1f5f9;
+  --tag-low: #dcfce7;
+  --tag-low-text: #15803d;
+  --tag-medium: #fef9c3;
+  --tag-medium-text: #a16207;
+  --tag-high: #fee2e2;
+  --tag-high-text: #b91c1c;
+  --tag-critical: #fdf2f8;
+  --tag-critical-text: #9d174d;
+  --tag-open: #eff6ff;
+  --tag-open-text: #1d4ed8;
+  --tag-progress: #fefce8;
+  --tag-progress-text: #92400e;
+  --tag-resolved: #f0fdf4;
+  --tag-resolved-text: #166534;
+  --star: #f59e0b;
+  --error-bg: #fef2f2;
+  --error-text: #dc2626;
+  --error-border: #fecaca;
+}
+
+.dark {
+  --bg: #0f0f0f;
+  --surface: #1a1a1a;
+  --surface-hover: #222222;
+  --border: #2d2d2d;
+  --border-strong: #404040;
+  --accent: #818cf8;
+  --accent-hover: #6366f1;
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-xmuted: #64748b;
+  --sidebar-bg: #141414;
+  --tag-low: #14532d;
+  --tag-low-text: #86efac;
+  --tag-medium: #422006;
+  --tag-medium-text: #fde68a;
+  --tag-high: #450a0a;
+  --tag-high-text: #fca5a5;
+  --tag-critical: #2d1b27;
+  --tag-critical-text: #f9a8d4;
+  --tag-open: #1e3a5f;
+  --tag-open-text: #93c5fd;
+  --tag-progress: #422006;
+  --tag-progress-text: #fde68a;
+  --tag-resolved: #14532d;
+  --tag-resolved-text: #86efac;
+  --star: #fbbf24;
+  --error-bg: #1c0a0a;
+  --error-text: #f87171;
+  --error-border: #7f1d1d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-xmuted);
+}
