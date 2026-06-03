@@ -31,6 +31,7 @@ function createTicket(): Ticket {
 const LS_TICKETS = "emo-helpdesk-tickets";
 const LS_ACTIVE = "emo-helpdesk-active";
 const LS_THEME = "emo-helpdesk-theme";
+const LS_ACCESS = "emo-helpdesk-access-code";
 
 // Distinctive marker the model appends before its hidden running summary.
 // Deliberately not a plain word like "SUMMARY:" that a reply might emit naturally.
@@ -87,11 +88,24 @@ export default function HomePage() {
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [hydrated, setHydrated] = useState(false);
+  // Access code (stored in this browser, sent as a header). The backend only
+  // enforces it when APP_ACCESS_CODE is configured, so local dev needs none.
+  const [accessCode, setAccessCode] = useState("");
+  const [accessInput, setAccessInput] = useState("");
+  const [gateError, setGateError] = useState("");
+  // Proactive gate: probe /api/access on load to decide whether to show the
+  // gate screen. `gateChecked` gates the first render until the probe resolves.
+  const [gateChecked, setGateChecked] = useState(false);
+  const [gateRequired, setGateRequired] = useState(false);
+  const [gateUnlocked, setGateUnlocked] = useState(false);
 
   // Load from localStorage
   useEffect(() => {
     const savedTheme = localStorage.getItem(LS_THEME) as "light" | "dark" | null;
     if (savedTheme) setTheme(savedTheme);
+
+    const savedAccess = localStorage.getItem(LS_ACCESS);
+    if (savedAccess) setAccessCode(savedAccess);
 
     const savedTickets = localStorage.getItem(LS_TICKETS);
     const parsed: Ticket[] = savedTickets ? JSON.parse(savedTickets) : [];
@@ -131,6 +145,43 @@ export default function HomePage() {
     if (activeTicketId) localStorage.setItem(LS_ACTIVE, activeTicketId);
     else localStorage.removeItem(LS_ACTIVE);
   }, [activeTicketId, hydrated]);
+
+  // Persist the access code in this browser.
+  useEffect(() => {
+    if (!hydrated) return;
+    if (accessCode) localStorage.setItem(LS_ACCESS, accessCode);
+    else localStorage.removeItem(LS_ACCESS);
+  }, [accessCode, hydrated]);
+
+  // Probe the backend once to decide whether to show the access gate. Reads the
+  // stored code directly (avoids state-timing races). Fail-open: a probe error
+  // never blocks the app — POST /api/chat still enforces the gate server-side.
+  useEffect(() => {
+    if (!hydrated) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "";
+        const stored = localStorage.getItem(LS_ACCESS) || "";
+        const res = await fetch(`${apiUrl}/api/access`, {
+          headers: stored ? { "X-Access-Code": stored } : {},
+        });
+        const data = await res.json();
+        if (cancelled) return;
+        setGateRequired(!!data.required);
+        setGateUnlocked(!data.required || !!data.valid);
+      } catch {
+        if (cancelled) return;
+        setGateRequired(false);
+        setGateUnlocked(true);
+      } finally {
+        if (!cancelled) setGateChecked(true);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [hydrated]);
 
   const activeTicket = tickets.find((t) => t.id === activeTicketId) ?? null;
   // Whether the currently-viewed ticket is awaiting a reply.
@@ -230,11 +281,23 @@ export default function HomePage() {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "";
       const res = await fetch(`${apiUrl}/api/chat`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          // Sent only if we have a code; the backend ignores it unless
+          // APP_ACCESS_CODE is configured, so local dev is unaffected.
+          ...(accessCode ? { "X-Access-Code": accessCode } : {}),
+        },
         // Wire payload carries prior context + the summary instruction.
         body: JSON.stringify({ message: buildPrompt(priorSummary, text) }),
       });
 
+      // Access-gated (e.g. the code was rotated mid-session): re-lock so the
+      // gate screen returns instead of showing a generic error.
+      if (res.status === 401) {
+        setGateRequired(true);
+        setGateUnlocked(false);
+        return;
+      }
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
 
@@ -293,7 +356,78 @@ export default function HomePage() {
     if (activeTicket) exportTicketAsMarkdown(activeTicket);
   };
 
-  if (!hydrated) return null;
+  const handleUnlock = async () => {
+    const code = accessInput.trim();
+    if (!code) return;
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "";
+      const res = await fetch(`${apiUrl}/api/access`, {
+        headers: { "X-Access-Code": code },
+      });
+      const data = await res.json();
+      if (data.valid) {
+        setAccessCode(code);
+        setAccessInput("");
+        setGateError("");
+        setGateUnlocked(true);
+      } else {
+        setGateError("Invalid access code");
+      }
+    } catch {
+      setGateError("Could not verify the code. Please try again.");
+    }
+  };
+
+  // Wait for hydration and the access probe before first paint.
+  if (!hydrated || !gateChecked) return null;
+
+  // Proactive gate: block the whole app until a required code is entered.
+  if (gateRequired && !gateUnlocked) {
+    return (
+      <div
+        className="flex h-full items-center justify-center px-6"
+        style={{ background: "var(--bg)" }}
+      >
+        <div
+          className="w-full max-w-sm rounded-xl border p-6"
+          style={{ background: "var(--surface)", borderColor: "var(--border)" }}
+        >
+          <h1 className="text-lg font-semibold" style={{ color: "var(--text-primary)" }}>
+            Emotional Helpdesk
+          </h1>
+          <p className="text-sm mt-1 mb-4" style={{ color: "var(--text-muted)" }}>
+            This app is access-restricted. Enter your access code to continue.
+          </p>
+          <input
+            type="password"
+            placeholder="Access code"
+            value={accessInput}
+            onChange={(e) => setAccessInput(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleUnlock()}
+            autoFocus
+            className="w-full rounded-md border px-3 py-2 text-sm outline-none"
+            style={{
+              background: "var(--bg)",
+              borderColor: "var(--border-strong)",
+              color: "var(--text-primary)",
+            }}
+          />
+          {gateError && (
+            <p className="text-xs mt-2" style={{ color: "var(--error-text)" }}>
+              {gateError}
+            </p>
+          )}
+          <button
+            onClick={handleUnlock}
+            className="mt-4 w-full rounded-md px-3 py-2 text-sm font-medium"
+            style={{ background: "var(--accent)", color: "white" }}
+          >
+            Unlock
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-full overflow-hidden" style={{ background: "var(--bg)" }}>
@@ -345,7 +479,27 @@ export default function HomePage() {
           </span>
         </div>
 
-        <div className="flex flex-col flex-1 min-h-0">
+        <div className="relative flex flex-col flex-1 min-h-0">
+          {/* Zen-garden background behind the thread: a responsive image
+              (desktop / mobile) with a theme-aware readability scrim over it.
+              Non-interactive and hidden from a11y. */}
+          <div aria-hidden className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+            <img
+              src="/zen-desktop.png"
+              alt=""
+              className="hidden md:block absolute inset-0 h-full w-full object-cover"
+            />
+            <img
+              src="/zen-mobile.png"
+              alt=""
+              className="block md:hidden absolute inset-0 h-full w-full object-cover"
+            />
+            <div
+              className="absolute inset-0"
+              style={{ background: "var(--bg)", opacity: "var(--scrim)" }}
+            />
+          </div>
+          <div className="relative z-10 flex flex-col flex-1 min-h-0">
           {activeTicket && (
             <TicketHeader
               ticket={activeTicket}
@@ -390,6 +544,7 @@ export default function HomePage() {
             onSubmit={handleSubmit}
             onDismissError={() => activeTicketId && clearTicketError(activeTicketId)}
           />
+          </div>
         </div>
       </div>
     </div>

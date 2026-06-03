@@ -14,6 +14,15 @@ def browser_context_args(browser_context_args):
 
 @pytest.fixture
 def page(page):
+    # Default: gate not required, so the app renders without the access screen.
+    page.route(
+        "**/api/access",
+        lambda route: route.fulfill(
+            status=200,
+            content_type="application/json",
+            body=json.dumps({"required": False, "valid": True}),
+        ),
+    )
     page.route(
         "**/api/chat",
         lambda route: route.fulfill(
@@ -44,6 +53,14 @@ def mobile_page(browser):
         permissions=["clipboard-read", "clipboard-write"],
     )
     p = context.new_page()
+    p.route(
+        "**/api/access",
+        lambda route: route.fulfill(
+            status=200,
+            content_type="application/json",
+            body=json.dumps({"required": False, "valid": True}),
+        ),
+    )
     p.route(
         "**/api/chat",
         lambda route: route.fulfill(

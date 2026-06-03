@@ -31,6 +31,9 @@
   --error-bg: #fef2f2;
   --error-text: #dc2626;
   --error-border: #fecaca;
+  /* Opacity of the readability scrim over the zen background image. Light
+     image + dark text reads fine, so the scrim is light here. */
+  --scrim: 0.35;
 }
 
 .dark {
@@ -64,6 +67,9 @@
   --error-bg: #1c0a0a;
   --error-text: #f87171;
   --error-border: #7f1d1d;
+  /* Stronger scrim in dark mode: the light zen image needs to be dimmed so the
+     light text stays readable over it. */
+  --scrim: 0.72;
 }
 
 * {
