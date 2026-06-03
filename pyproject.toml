@@ -11,5 +11,16 @@ dependencies = [
     "pydantic>=2.11.4",
     "uvicorn>=0.34.2",
     "python-multipart>=0.0.18",
-    "dotenv>=0.9.9",
+    "python-dotenv>=1.0.0",
+    "pip-system-certs>=5.3",
 ]
+
+[dependency-groups]
+dev = [
+    "playwright>=1.60.0",
+    "pytest-playwright>=0.7.0",
+    "pytest>=8.0.0",
+]
+
+[tool.pytest.ini_options]
+base_url = "http://localhost:3000"

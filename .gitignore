@@ -165,3 +165,7 @@ cython_debug/
 .vercel
 .cursor/
 .windsurf/
+.claude/
+public/AGENTS.md
+public/CLAUDE.md
+
