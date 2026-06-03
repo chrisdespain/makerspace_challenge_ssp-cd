@@ -35,6 +35,23 @@ def test_summary_sentinel_hidden_from_ui(page):
     expect(page.get_by_text(SENTINEL)).to_have_count(0)
 
 
+def test_summary_only_reply_does_not_leak(page):
+    """Input: the model returns ONLY a summary after the sentinel (no visible reply). Expected: the summary is never shown; a neutral placeholder appears instead."""
+    page.route(
+        "**/api/chat",
+        lambda route: route.fulfill(
+            status=200,
+            content_type="application/json",
+            body=json.dumps({"reply": f"{SENTINEL} leaked summary text"}),
+        ),
+    )
+    page.locator("textarea").fill("hi")
+    page.locator("textarea").press("Enter")
+    expect(page.get_by_test_id("ticket-thread").get_by_text("(No response.)")).to_be_visible()
+    expect(page.get_by_text("leaked summary text")).to_have_count(0)
+    expect(page.get_by_text(SENTINEL)).to_have_count(0)
+
+
 def test_prior_summary_sent_on_next_message(page):
     """Input: send two messages; the model returns a summary each time. Expected: the second request's payload carries the first summary, and no summary shows in the UI."""
     requests = []
