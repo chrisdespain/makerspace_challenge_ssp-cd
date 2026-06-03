@@ -1,8 +1,7 @@
 import json
 import pytest
 
-BASE_URL = "http://localhost:3000"
-MOCK_REPLY = "Thank you for filing this ticket. We will get to it eventually."
+from tests.constants import BASE_URL, MOCK_REPLY
 
 
 @pytest.fixture(scope="session")

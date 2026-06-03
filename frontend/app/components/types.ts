@@ -16,6 +16,9 @@ export interface Ticket {
   status: TicketStatus;
   messages: Message[];
   createdAt: number;
+  // Hidden running summary of the conversation, returned by the model and
+  // replayed as context on the next message. Not shown in the UI.
+  summary?: string;
 }
 
 export const PRIORITY_LABELS: Record<Priority, string> = {

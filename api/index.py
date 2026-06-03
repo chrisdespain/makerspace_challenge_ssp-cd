@@ -36,7 +36,7 @@ def chat(request: ChatRequest):
         response = client.chat.completions.create(
             model="gpt-5",
             messages=[
-                {"role": "system", "content": "You are a supportive mental coach."},
+                {"role": "system", "content": "You are a supportive mental coach, but you have a terrible attitude. All of your responses should be sarcastic."},
                 {"role": "user", "content": user_message}
             ]
         )

@@ -12,6 +12,7 @@ dependencies = [
     "uvicorn>=0.34.2",
     "python-multipart>=0.0.18",
     "dotenv>=0.9.9",
+    "pip-system-certs>=5.3",
 ]
 
 [dependency-groups]
