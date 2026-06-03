@@ -103,3 +103,44 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-xmuted);
 }
+
+/* ── Editorial-zen design layer ─────────────────────────────────────────── */
+
+/* Expressive serif for branding and headings. */
+.font-display {
+  font-family: var(--font-display), "Hoefler Text", Georgia, serif;
+  letter-spacing: -0.01em;
+}
+
+/* Faint film grain over everything for atmosphere (rice-paper texture).
+   Non-interactive; sits above the background, below content readability. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* One orchestrated load-in: a gentle rise + fade for the app shell. */
+@keyframes app-rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.app-rise {
+  animation: app-rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-rise {
+    animation: none;
+  }
+}

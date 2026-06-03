@@ -67,11 +67,12 @@ function parseReply(raw: string): { display: string; summary: string | null } {
     // Model didn't comply — show the whole reply, keep the previous summary.
     return { display: raw.trim(), summary: null };
   }
-  let display = raw.slice(0, idx).trim();
+  const display = raw.slice(0, idx).trim();
   const summary = raw.slice(idx + CONTEXT_SENTINEL.length).trim() || null;
-  // Degenerate case: nothing before the marker — strip the marker and show the rest.
-  if (!display) display = raw.split(CONTEXT_SENTINEL).join("").trim();
-  return { display, summary };
+  // Never fall back to the post-sentinel text — that's the hidden summary, and
+  // surfacing it would leak context into the chat. If there was no visible
+  // reply before the marker, show a neutral placeholder instead.
+  return { display: display || "(No response.)", summary };
 }
 
 export default function HomePage() {
@@ -248,6 +249,7 @@ export default function HomePage() {
 
     // Capture the prior running summary for this conversation before we mutate.
     const priorSummary = activeTicket?.summary;
+    const wasNewTicket = !activeTicket;
 
     // Materialize a ticket on the first submit (draft mode), otherwise append
     // to the active ticket. `targetId` is the canonical ID every async write
@@ -291,9 +293,20 @@ export default function HomePage() {
         body: JSON.stringify({ message: buildPrompt(priorSummary, text) }),
       });
 
-      // Access-gated (e.g. the code was rotated mid-session): re-lock so the
-      // gate screen returns instead of showing a generic error.
+      // Access-gated (e.g. the code was rotated mid-session): roll back the
+      // optimistic user message so nothing is orphaned, restore the text to the
+      // input, and re-lock so the gate screen returns instead of a generic error.
       if (res.status === 401) {
+        if (wasNewTicket) {
+          setTickets((prev) => prev.filter((t) => t.id !== targetId));
+          setActiveTicketId(null);
+        } else {
+          updateTicket(targetId, (t) => ({
+            ...t,
+            messages: t.messages.filter((m) => m.id !== userMsg.id),
+          }));
+        }
+        setInput(text);
         setGateRequired(true);
         setGateUnlocked(false);
         return;
@@ -389,10 +402,13 @@ export default function HomePage() {
         style={{ background: "var(--bg)" }}
       >
         <div
-          className="w-full max-w-sm rounded-xl border p-6"
+          className="app-rise w-full max-w-sm rounded-xl border p-6"
           style={{ background: "var(--surface)", borderColor: "var(--border)" }}
         >
-          <h1 className="text-lg font-semibold" style={{ color: "var(--text-primary)" }}>
+          <h1
+            className="font-display text-2xl font-semibold tracking-tight"
+            style={{ color: "var(--text-primary)" }}
+          >
             Emotional Helpdesk
           </h1>
           <p className="text-sm mt-1 mb-4" style={{ color: "var(--text-muted)" }}>
@@ -430,7 +446,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className="flex h-full overflow-hidden" style={{ background: "var(--bg)" }}>
+    <div className="app-rise flex h-full overflow-hidden" style={{ background: "var(--bg)" }}>
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div
@@ -518,7 +534,7 @@ export default function HomePage() {
           ) : (
             <div className="flex-1 flex flex-col items-center justify-center px-6 text-center">
               <p
-                className="text-base font-medium"
+                className="font-display text-2xl font-medium tracking-tight"
                 style={{ color: "var(--text-secondary)" }}
               >
                 Describe your issue to open a ticket
