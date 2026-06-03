@@ -21,6 +21,7 @@ def gated_page(page):
     both validate the X-Access-Code header against 'letmein'.
     """
     def access_handler(route):
+        # Playwright normalizes header names to lowercase.
         valid = route.request.headers.get("x-access-code") == "letmein"
         route.fulfill(
             status=200,

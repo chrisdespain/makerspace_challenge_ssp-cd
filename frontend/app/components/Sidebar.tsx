@@ -52,7 +52,7 @@ export default function Sidebar({
           <Ticket size={14} color="white" />
         </div>
         <span
-          className="text-sm font-semibold tracking-tight"
+          className="font-display text-base font-semibold tracking-tight"
           style={{ color: "var(--text-primary)" }}
         >
           Emotional Helpdesk
