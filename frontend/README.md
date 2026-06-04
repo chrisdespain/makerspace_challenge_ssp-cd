@@ -86,7 +86,7 @@ The repo deploys as-is — no restructuring needed:
 ### One-time setup (Vercel CLI)
 
 ```
-npm i -g vercel
+ple
 vercel login
 vercel link        # link this folder to a Vercel project; creates .vercel/
 ```
