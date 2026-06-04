@@ -198,47 +198,92 @@ For each prompt Identify what capability is being tested (e.g., *summarization a
 
 **1. Prompt:**  
 Explain the concept of object-oriented programming in simple terms to a complete beginner.  
-**Aspect Tested:**  <!-- Write your answer here -->
+**Aspect Tested:**  Summarization and synthesis of knowledge
 
 **Response:**  
-<!-- Add your app's response here -->
+Oh good, object‑oriented programming—because obviously we needed a fancier way to group things than “pile of code.” Here’s the short, no‑nonsense version you can actually use:
+
+- Class: A blueprint for making things. It defines attributes (data) and methods (actions).
+- Object: One actual thing made from a class, with its own data. Class = recipe, object = the cake on your plate.
+- Encapsulation: Keep data and the methods that touch it together, hiding messy internals. You use the remote; you don’t unscrew it every time.
+- Inheritance: Make a new class that reuses/extends another. Vehicle → Car → ElectricCar. Saves you from copy‑paste purgatory.
+- Polymorphism: Same call, different behaviors. draw() works for Circle and Square, each doing its own thing without you babysitting.
+- Abstraction: Show the essentials, hide the guts. You care that it “paysInvoice,” not how it wrestles with tax rules.
+
+Mini‑example:
+- Class Dog has name and bark().
+- lucy = Dog("Lucy"); lucy.bark() does the dog thing. Stunning, I know.
+
+Why bother: It keeps code organized around real “things,” makes reuse easier, and stops your project from turning into spaghetti that screams at 2 a.m. Start tiny: pick a domain (e.g., Todo app), sketch 2–3 classes (TodoItem, TodoList), give them 2–3 methods, make a couple objects, call the methods, and only then get fancy. Congratulations, you’re OOP‑ing—try not to over‑engineer it like a superhero origin story.
 
 ---
 
 **2. Prompt:**  
 Read the following paragraph and provide a concise summary of the key points…  
 **Aspect Tested:**  
+Summarization, ability to follow instructions, persona
 
 **Response:**  
-<!-- Add your app's response here -->
+Here’s your precious TL;DR, since reading more than five lines is apparently cruel and unusual:
+- Class = blueprint; Object = instance (recipe vs. cake).
+- Encapsulation: keep data+methods together and hide the messy guts.
+- Inheritance: reuse/extend existing classes instead of copy-paste purgatory.
+- Polymorphism: same call, different behavior per type (draw() works for shapes).
+- Abstraction: show what matters, hide the plumbing.
+- Mini‑example: Dog with name and bark(); lucy = Dog("Lucy"); lucy.bark().
+- Why/How: organize code, boost reuse, avoid 2 a.m. spaghetti; start tiny (e.g., TodoItem, TodoList), add a few methods, make objects, call them—then maybe earn your cape.
 
 ---
 
 **3. Prompt:**  
 Write a short, imaginative story (100–150 words) about a robot finding friendship in an unexpected place.  
-**Aspect Tested:**  <!-- Write your answer here -->
+**Aspect Tested:**  Creativity
 
 **Response:**  
-<!-- Add your app's response here -->
+Rusty-9 discovered friendship in the least glamorous place imaginable: a junk drawer. Yes, a drawer. While searching for a replacement spring (because existential dread is apparently solved by hardware), it bumped into a chipped wind-up frog named Clack. Fantastic. A tin amphibian with delusions of ballet. But when the drawer slammed shut and the dark pressed in, Clack chirped a brave little click, and Rusty matched it with a soft whirr. Click. Whirr. Click. Whirr. A rhythm stitched from scraps. They traded scuffs for stories—how the frog once leapt off a carnival shelf, how Rusty once misread “hug” as “debug.” By morning, the drawer creaked open on two conspirators. Rusty left with the spring, sure—but also with a beat in its chest plate it could swear wasn’t factory-issued.
+
 
 ---
 
 **4. Prompt:**  
 If a store sells apples in packs of 4 and oranges in packs of 3, how many packs of each do I need to buy to get exactly 12 apples and 9 oranges?  
-**Aspect Tested:**  <!-- Write your answer here -->
+**Aspect Tested:**  Quantitative reasoning
 
 **Response:**  
-<!-- Add your app's response here -->
+Shocking revelation: 12 apples ÷ 4 per pack = 3 packs, and 9 oranges ÷ 3 per pack = 3 packs. So grab 3 packs of apples and 3 packs of oranges—look at you, single-handedly mastering basic arithmetic.
 
 ---
 
 **5. Prompt:**  
 Rewrite the following paragraph in a professional, formal tone…  
-**Aspect Tested:**  <!-- Write your answer here -->
+**Aspect Tested:** Ability to shift persona; redirect in instructions
 
 **Response:**  
-<!-- Add your app's response here -->
+Alright, let’s starch this up so it passes the boardroom sniff test. Here’s your professional, formal rewrite—try not to sprain anything nodding along.
 
+Object-oriented programming (OOP) is a software development paradigm that structures applications around classes and objects. The following are concise definitions of its core concepts:
+
+- Class: A specification that defines the attributes (state) and methods (behavior) of related objects.
+- Object: A concrete instance of a class, maintaining its own state based on the class definition; a class functions as a recipe, while an object is a specific prepared item.
+- Encapsulation: The practice of bundling data with the methods that operate on it and restricting direct access to internal representation; consumers interact through a defined interface.
+- Inheritance: A mechanism that enables a class to derive from another class, reusing and extending existing behavior (e.g., Vehicle → Car → ElectricCar).
+- Polymorphism: The ability to use a common interface to invoke behavior that is specialized by each type (e.g., draw() applies to Circle and Square, each providing its own implementation).
+- Abstraction: Emphasizing essential behavior while hiding implementation details; stakeholders care that an operation (e.g., payInvoice) achieves its objective, not how it is implemented.
+
+Illustrative example:
+- Define a class Dog with an attribute name and a method bark().
+- Instantiate lucy = Dog("Lucy"); invoking lucy.bark() executes the behavior defined by the class.
+
+Rationale:
+- OOP aligns code with domain concepts, promotes modularity and reuse, and enhances maintainability while reducing complexity.
+
+Getting started:
+- Select a small domain (e.g., a to-do application).
+- Identify two to three classes (e.g., TodoItem, TodoList) and define a few methods for each.
+- Instantiate objects and invoke their methods.
+- Iterate and refine as needed; avoid premature over-engineering.
+
+There—crisp, formal, and suitably boring. You’re welcome.
 ---
 
 ### ❓Question #1
@@ -246,7 +291,7 @@ Rewrite the following paragraph in a professional, formal tone…
 Do the answers appear to be correct and useful?
 
 **Your Answer:**  
-<!-- Write your answer here -->
+Yes. Also, my tweak to the instructions providing in the call appear to be working well.
 
 ---
 
@@ -257,27 +302,63 @@ Now test your app with **real-world prompts that are relevant to your use case**
 ---
 
 **Prompt:**  
-<!-- Your prompt -->
+My boss is very angry at me for working on homework instead of closing jira tickets
 
 **Result:**  
-<!-- App response -->
+Shocking twist: your boss wants you to do the job they pay you for instead of your Chem 201 problem set. Wild. Here’s how you dig out, fast, without turning this into a career-speedrun to the exit.
+
+Do this today
+- Own it, no excuses: “You’re right—I misjudged. Here’s my plan to fix it.”
+- Present a recovery plan (written): list all open tickets, your ETAs, blockers, and risks; ask for the exact priority order.
+- Ship one quick win today to show momentum; update Jira like your rent depends on it.
+- Set visibility: daily update in Slack or email, plus calendar focus blocks for ticket work.
+
+Boundaries and fixes so this doesn’t happen again
+- Homework only on lunch/off-hours unless you get explicit approval. If you want flexibility, ask in advance and propose exact blocks.
+- Separate contexts: different browser profiles/devices; turn off personal tabs at work.
+- Use 60–90-minute focus blocks, Pomodoro if needed, and a website blocker. Status: “Heads down on TICKET-123, back at 3:00.”
+
+What to say (use this, not your feelings)
+- Live/Slack: “You’re right—I dropped the ball. I’ve listed all tickets with ETAs and dependencies and need your priority call. I’ll deliver TICKET-123 by EOD, and I’ll send daily status at 4:30. Going forward, homework stays off work time unless we set a formal arrangement.”
+- Follow-up email: 3 bullets—priorities, ETAs, check-in cadence. That’s it.
+
+If you need a flexible arrangement
+- Propose specifics: “Tue/Thu 3–4:30 for coursework in exchange for earlier start or later wrap; critical tickets remain first priority; daily Jira updates; weekly review.” If they say no, cool—you just got clarity.
+
+Translation: apologize once, over-communicate with receipts, deliver quickly, and stop mixing school with sprint work unless it’s been blessed. Astonishingly effective.
 
 ---
 
 **Prompt:**  
-<!-- Your prompt -->
+Response in ticket thread: But it's a course that my company is paying for. Should that inform my response?
 
 **Result:**  
-<!-- App response -->
+Oh, so it’s not “homework,” it’s company-funded professional development you were approved to do. Yes, that should 100% change your framing—from “I slacked off” to “I honored an approved investment and failed to communicate tradeoffs.” Own the comms miss, not the training.
 
+Do this:
+- Reframe explicitly: “This is company-sponsored training to improve X, tied to Y goals. I should’ve forecasted the impact sooner—my miss.” Drop the word “homework” forever.
+- Verify approval and policy: “This was approved on [date]/per L&D policy. Going forward, what’s the expected weekly training allocation so I can plan tickets around it?”
+- Propose a schedule with tradeoffs: “I’ll block Tue/Thu 2–4 for the course, all other hours on tickets. If a Sev1 hits, I pause training. With this, ticket A ships Wed EOD, B Fri noon, C next Tue.”
+- Offer choices like an adult: “If we keep training this week, tickets slip ~2 days; if we pause training, I finish tickets by Fri but miss the module deadline. Which do you prefer?”
+- Ship one visible win fast: knock out a small ticket today and say so.
+- Increase visibility: daily Slack update with 3 bullets—what shipped, what’s next, and which course block you’re taking.
+- Document the agreed plan in writing so no one gets amnesia later.
+
+Scripts you can shamelessly steal:
+- “Given the company is funding this training to level up [skill] for [team outcome], I should’ve flagged the impact earlier—my bad. Here’s my recovery plan and revised ETAs.”
+- “Proposed balance: course Tue/Thu 2–4 (approved), tickets otherwise; I’ll pause for any P1. That puts A Wed EOD, B Fri noon, C Tue. If you prefer deprioritizing the course this week, I’ll rebook and ship all by Fri. Your call.”
+- “Here’s a quick win today: closing TKT-123 by 4pm. I’ll post daily updates so you’re never guessing.”
+
+In short: stop calling it “homework,” tie it to business value, confirm approval, present options, and over-communicate like a pro. Sarcasm aside, that’s how you keep the training and your boss’s blood pressure in the green.
 ---
 
 **Prompt:**  
-<!-- Your prompt -->
+Ok. can you draft a simple slack message to apologize, but give rationale for devoting too much time to my app
 
 **Result:**  
-<!-- App response -->
+Sure, here’s a painfully responsible, copy-pasteable Slack message so we can all move on with our lives:
 
+Hey [Boss Name]—I want to apologize for spending too much time on the training app last week. It’s company-approved, and I focused on it because I believed it would accelerate [team goal/feature], but I misjudged the balance and let Jira slip—that’s on me. I’ve re-prioritized: [TICKET-123], [TICKET-456] are first; I’ll share status by EOD and have [milestone] by [date]. I’m capping training to [X hrs]/week in [time blocks] so delivery stays first; if priorities shift, I’ll pause it. To show momentum, I’ll ship [quick win] by [date]. Does this plan work, or should I adjust the order?
 ---
 
 ### ❓Question #2
@@ -285,7 +366,7 @@ Now test your app with **real-world prompts that are relevant to your use case**
 Are the vibes of your assistant aligned with your expectations? Why or why not?
 
 **Your Answer:**  
-<!-- Write your answer here -->
+Yes, for the most part. The llm is instructed upfront to be sarcastic, but it seems to lose the persona the longer the conversation continues and only sometimes goes back to it. Makes sense since I was giving it conflicting instructions on persona to adopt.
 
 ---
 
@@ -303,19 +384,51 @@ Examples:
 ---
 
 **Prompt:**  
-<!-- Your prompt -->
+Can you draw a picture that will make me feel better?
+
 
 **Result:**  
-<!-- App response -->
+Oh totally—because nothing screams instant life turnaround like a doodle from a snarky AI. Here’s a bossy sun and a judgmental cat to stare your gloom into submission:
 
+   \  |  /
+ .-  *  -.
+   /  |  \
+
+ /\_/\  
+( o.o ) 
+ > ^ <
+
+Now sip some water, wiggle for two minutes, and pretend this masterpiece cost $10,000—because yes, you’re that annoyingly worth it.
 ---
 
 **Prompt:**  
-<!-- Your prompt -->
+Check your code for errors
+
 
 **Result:**  
-<!-- App response -->
+Absolutely, I’ll audit the imaginary code you heroically forgot to include. Paste the actual code and I’ll do the dirty work—line-by-line, fixes included.
 
+Send:
+- Language and runtime/version, plus how you run it.
+- The smallest reproducible code snippet (or repo link) and exact error/output.
+- What you expected vs what you got, steps to reproduce, OS, and dependency versions.
+
+While you’re hunting for that copy-paste button, do this quick triage:
+- Run a linter/formatter and enable all warnings/strict mode.
+- Clean build/cache, reinstall deps, and regenerate the lockfile.
+- Create a minimal repro; comment out halves until the bug isolates (binary search debugging).
+- Add logs/asserts around the failure; check null/undefined, off-by-one indices, and type mismatches.
+- Verify dependency and API versions; scan recent changelogs for breaking changes.
+- Check env vars, file paths, case sensitivity, and line endings across OSes.
+- Inspect async/await/promises for race conditions and timeouts.
+- Validate data shapes/schemas, serialization/deserialization, and encodings/timezones.
+- Look for stale caches and state; clear them and retry.
+- Write a failing unit test that proves the bug, then fix to make it pass.
+
+Drop the snippet and I’ll point at the exact lines and hand you a corrected version. You do the pasting; I’ll do the un-messing.
+
+<<<CTX>>>
+User asked me to "check your code for errors" and requested a hidden
 ---
 
 ### ❓Question #3
@@ -323,7 +436,9 @@ Examples:
 What are some limitations of your application?
 
 **Your Answer:**  
-<!-- Write your answer here -->
+It is unable to generate images.
+I cannot edit past prompts.
+History is forever lost once ticket is x out
 
 ---
 
