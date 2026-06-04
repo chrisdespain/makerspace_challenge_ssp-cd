@@ -1,6 +1,6 @@
 # Emotional Helpdesk — Frontend
 
-A Next.js chat interface styled as a corporate IT support ticket system. Users file emotional support tickets (`EMO-XXXX`), set priority levels, and receive responses from a "Level 1 Support" agent backed by the FastAPI service in `/api`.
+A Next.js chat interface styled as a corporate IT support ticket system. Users file emotional support tickets (`EMO-XXXX`), set priority levels, and receive responses from a "Level 1 Support" agent backed by the FastAPI service in `src/api`.
 
 ## Local development
 
@@ -9,13 +9,14 @@ A Next.js chat interface styled as a corporate IT support ticket system. Users f
 From the project root:
 
 ```
-uv run uvicorn api.index:app --reload
+uv run uvicorn src.api.index:app --reload
 ```
 
 ### Frontend (port 3000)
 
+From `src/`:
+
 ```
-cd frontend
 npm install
 npm run dev
 ```
@@ -24,7 +25,7 @@ Open http://localhost:3000.
 
 ## Environment variables
 
-Create `frontend/.env.local`:
+Create `src/.env.local`:
 
 ```
 NEXT_PUBLIC_API_URL=http://localhost:8000
@@ -42,7 +43,7 @@ OPENAI_API_KEY=sk-...
 
 The suite in `/tests` uses Playwright via the `pytest-playwright` plugin. Each test launches Chromium and drives the running app at http://localhost:3000.
 
-**NOTE:** The backend is not required to run the tests. `tests/conftest.py` mocks `POST /api/chat`, so `uvicorn` and an `OPENAI_API_KEY` are not needed — only the frontend dev server.
+**NOTE:** The backend is not required to run the tests. `tests/conftest.py` mocks `POST /api/chat` and `GET /api/access`, so `uvicorn` and an `OPENAI_API_KEY` are not needed — only the frontend dev server.
 
 One-time setup to install the Chromium browser:
 
@@ -50,10 +51,9 @@ One-time setup to install the Chromium browser:
 playwright install chromium
 ```
 
-1. Start the frontend dev server (port 3000):
+1. Start the frontend dev server (from `src/`):
 
     ```
-    cd frontend
     npm run dev
     ```
 
@@ -64,7 +64,7 @@ playwright install chromium
     pytest tests/ -v
     ```
 
-**NOTE:** Run `pytest` from the project root, not from `frontend/`. The pytest configuration and the `tests/` package resolve relative to the root, and the virtual environment must be active so `pytest`, `playwright`, and the browser are on the path.
+**NOTE:** Run `pytest` from the project root, not from `src/`. The pytest configuration and the `tests/` package resolve relative to the root, and the virtual environment must be active so `pytest`, `playwright`, and the browser are on the path.
 
 Useful variations:
 
@@ -77,16 +77,18 @@ pytest tests/ --headed             # run with a visible browser window
 
 ## Deployment (Vercel)
 
-The repo deploys as-is — no restructuring needed:
+The project uses `src/` as the Vercel Root Directory:
 
-- `api/index.py` is auto-detected as a Python serverless function at the repo root.
-- The frontend builds via `vercel.json` (`framework: nextjs`, `cd frontend && npm run build`, output `frontend/.next`).
-- `/api/*` is routed to the Python function via the `rewrites` in `vercel.json`.
+- `src/api/index.py` is auto-detected as a Python serverless function.
+- Next.js is detected from `src/package.json`.
+- `/api/*` is routed to the Python function via the `rewrites` in `src/vercel.json`.
+
+**NOTE:** Set Root Directory = `src` in Vercel → Project → Settings → General before deploying.
 
 ### One-time setup (Vercel CLI)
 
 ```
-ple
+npm i -g vercel
 vercel login
 vercel link        # link this folder to a Vercel project; creates .vercel/
 ```
@@ -143,7 +145,7 @@ The key is stored only in Vercel environment variables — never committed to th
 
 When `APP_ACCESS_CODE` is set, the app shows a code screen before it can be used. Share the code to grant access; change it (and redeploy) to revoke everyone. The code is entered once per browser and stored locally.
 
-- This is an **app-level** gate (a plain env var checked in `api/index.py`), not Vercel Deployment Protection — so it works on any plan, including Hobby, and grants access by shared code rather than per-account invites.
+- This is an **app-level** gate (a plain env var checked in `src/api/index.py`), not Vercel Deployment Protection — so it works on any plan, including Hobby, and grants access by shared code rather than per-account invites.
 - It is inactive locally: with `APP_ACCESS_CODE` unset, the gate is open and the backend uses your OS `OPENAI_API_KEY` — local dev needs neither.
 
 ## Features

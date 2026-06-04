@@ -11,7 +11,7 @@ import os
 os.environ.setdefault("OPENAI_API_KEY", "test-key-not-used")
 
 from fastapi.testclient import TestClient  # noqa: E402
-from api.index import app  # noqa: E402
+from src.api.index import app  # noqa: E402
 
 client = TestClient(app)
 
