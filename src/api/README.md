@@ -28,7 +28,7 @@ Run all commands from the repository root.
 ## Running the server
 
 ```
-uv run uvicorn api.index:app --reload
+uv run uvicorn src.api.index:app --reload
 ```
 
 The server runs on http://localhost:8000 with auto-reload enabled for development.

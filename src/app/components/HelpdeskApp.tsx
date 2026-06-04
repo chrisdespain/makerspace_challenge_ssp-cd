@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import Image from "next/image";
 import { Menu } from "lucide-react";
 import Sidebar from "./Sidebar";
 import TicketHeader from "./TicketHeader";
@@ -500,15 +501,22 @@ export default function HomePage() {
               (desktop / mobile) with a theme-aware readability scrim over it.
               Non-interactive and hidden from a11y. */}
           <div aria-hidden className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-            <img
+            {/* Next/Image auto-converts to WebP, optimizes for the viewport size,
+                and serves the correct format — significantly faster than raw <img>. */}
+            <Image
               src="/zen-desktop.png"
               alt=""
-              className="hidden md:block absolute inset-0 h-full w-full object-cover"
+              fill
+              priority
+              sizes="100vw"
+              className="hidden md:block object-cover"
             />
-            <img
+            <Image
               src="/zen-mobile.png"
               alt=""
-              className="block md:hidden absolute inset-0 h-full w-full object-cover"
+              fill
+              sizes="100vw"
+              className="block md:hidden object-cover"
             />
             <div
               className="absolute inset-0"
